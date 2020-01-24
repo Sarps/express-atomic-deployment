@@ -36,11 +36,11 @@ const start = (port) => {
                 getServerInfo();
                 resolve();
             } else {
-                console.log(data);
+                console.log(`${data}`);
             }
         });
         server.stderr.on('data', (data) => {
-            console.error(data);
+            console.error(`${data}`);
             reject();
         });
         server.on('close', (code) => {

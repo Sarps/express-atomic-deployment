@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "plug.js"
+    "start": "node plug.js"
   },
   "dependencies": {
     "chokidar": "^3.3.1",
