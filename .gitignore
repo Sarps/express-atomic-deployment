@@ -4,3 +4,5 @@ yarn-error.log
 package-lock.json
 server.process
 .idea
+nohup.out
+routes

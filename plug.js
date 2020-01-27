@@ -19,16 +19,10 @@ const getServerInfo = () => {
     }
 };
 
-const forwardPort = () => {
-    http.createServer(function (req, res) {
-        req.forward = {target: `${process.env.SCHEME}://${process.env.INTERNAL_HOST}:${serverInfo[1]}`};
-        forward(req, res);
-    }).listen(process.env.EXTERNAL_PORT, process.env.EXTERNAL_HOST);
-};
-
 const start = (port) => {
     return new Promise(((resolve, reject) => {
-        const server = spawn('node', [process.env.SERVER_SCRIPT, '--port', port], {
+        const ops = process.env.SERVER_SCRIPT.split(" ").filter(a => a.length);
+        const server = spawn(ops.shift(), [...ops, '--port', port], {
             detached: true,
         });
         server.stdout.on('data', (data) => {
@@ -73,9 +67,15 @@ const randomPort = async () => {
     throw 'No port available';
 };
 
+(function forwardPort() {
+    http.createServer(function (req, res) {
+        req.forward = {target: `${process.env.SCHEME}://${process.env.INTERNAL_HOST}:${serverInfo[1]}`};
+        forward(req, res);
+    }).listen(process.env.EXTERNAL_PORT, process.env.EXTERNAL_HOST);
+})();
+
 (async function main() {
     getServerInfo();
-    forwardPort();
     try {
         if (serverInfo[0] === undefined || !isRunning(serverInfo[0])) {
             await start(await randomPort());
